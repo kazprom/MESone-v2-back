@@ -1,0 +1,12 @@
+extend type Mutation {
+    "Аутентификация пользователя и генерация токена"
+    login(login: String!, password: String!, remember: Boolean): User @field(resolver: "AuthController@login")
+}
+
+extend type Mutation @guard {
+    "Обновление текущего токена пользователя"
+    refreshToken: String @field(resolver: "AuthController@refreshToken")
+
+    "Удаление текущего токена пользователя"
+    logout: User @field(resolver: "AuthController@logout")
+}

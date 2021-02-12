@@ -1,7 +1,7 @@
 type User {
     id: ID!
-    name: String!
-    email: String!
+    login: String!
+    token: String
     created_at: DateTime!
     updated_at: DateTime!
 }

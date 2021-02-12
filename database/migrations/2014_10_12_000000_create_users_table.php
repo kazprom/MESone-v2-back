@@ -15,12 +15,24 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->boolean('enabled')->default(true);
+            $table->string('login', 64)->unique();
+            $table->string('password');
+
+            $table->string('first_name', 64);
+            $table->string('last_name', 64)->nullable();
+            $table->string('second_name', 64)->nullable();
+            $table->string('avatar', 64)->nullable();
+
+            $table->unsignedBigInteger('domain_id')->nullable();
+            $table->unsignedBigInteger('structure_enterprise_id')->nullable();
+            $table->boolean('is_admin')->default(false);
+
+            $table->index('login');
+//            $table->foreign('domain_id')->references('id')->on('domains');
         });
     }
 
