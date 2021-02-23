@@ -34,6 +34,17 @@ class AuthController extends Controller
             $installer = new Installer();
             $installer->token = $guard->login($installer);
             return $guard->user();
+        } elseif (isset($args['domain_id'])) {
+            /*
+            * Aвторизация по домену
+            */
+            if ($this->domain($args['login'], $args['password'], $args['domain_id'])) {
+                $userId = User::where('login', $args['login'])->value('id');
+                $token = $guard->loginUsingId($userId);
+                $user = $guard->user();
+                $user['token'] = $token;
+                return $user;
+            }
         } elseif ($token = $guard->attempt(['login' => $args['login'], 'password' => $args['password']])) {
             /*
              * Стандартная авторизация

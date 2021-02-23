@@ -1,0 +1,14 @@
+type Domain {
+    id: ID!
+    enabled: Boolean
+    name: String!
+    description: String
+    ad_protocol: Int
+    ad_server: String!
+    ad_server_port: Int
+    ad_base_dn: String
+    login_prefix: String
+    login_suffix: String
+    "Список пользователей относящихся к домену"
+    users: [User]
+}

@@ -1,7 +1,22 @@
 type User {
     id: ID!
+    first_name: String!
+    last_name: String
+    second_name: String
+    avatar: String
     login: String!
+    password: String!
     token: String
-    created_at: DateTime!
-    updated_at: DateTime!
+    enabled:  Boolean!
+    domain_id: ID
+    domain: Domain
+    structure_enterprise_id: ID
+    is_admin:  Boolean
+#    "Список функций, которые доступны пользователю"
+#    functions: [Functions!]! @belongsToMany
+#    "Список групп в которых состит пользователь"
+#    groups: [Group!]! @belongsToMany
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
