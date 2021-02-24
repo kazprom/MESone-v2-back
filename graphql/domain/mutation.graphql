@@ -1,0 +1,29 @@
+extend type Mutation @guard {
+    "Создать новый домен"
+    domainCreate(
+        name: String!
+        ad_protocol: Int
+        ad_server: String!
+        ad_server_port: Int
+        ad_base_dn: String
+        login_prefix: String
+        login_suffix: String
+    ):Domain @create
+
+    "Обновление записи о домене"
+    domainUpdate(
+        id: ID!
+        enabled: Boolean
+        name: String
+        description: String
+        ad_protocol: Int
+        ad_server: String
+        ad_server_port: Int
+        ad_base_dn: String
+        login_prefix: String
+        login_suffix: String
+    ):Domain @update
+
+    "Удаление домена"
+    domainDelete(id: ID!):Domain @delete
+}

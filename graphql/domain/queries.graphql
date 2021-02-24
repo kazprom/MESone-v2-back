@@ -1,10 +1,19 @@
 extend type Query {
-#    "Проверка доступности домена"
-#    checkDomain(
-#        ad_protocol: Int
-#        ad_server: String!
-#        ad_server_port: Int
-#    ): Boolean @field(resolver: "DomainsQueries@checkDomain")
-    domains(enabled: Boolean @eq): [Domain!]! @all
-    domain(id: ID @eq): Domain @find
+    "Проверка доступности домена"
+    domainPing(
+        ad_protocol: Int
+        ad_server: String!
+        ad_server_port: Int
+    ): Boolean @field(resolver: "DomainController@ping")
+
+    "Получить список доменов"
+    domains(
+        "Флаг активности домена"
+        enabled: Boolean @eq
+    ): [Domain!]! @all
+
+    "Получить запись о домене"
+    domain(
+        id: ID @eq
+    ): Domain @find
 }

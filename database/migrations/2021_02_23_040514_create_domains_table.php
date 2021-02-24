@@ -18,16 +18,16 @@ class CreateDomainsTable extends Migration
             $table->timestamps();
 
             $table->boolean('enabled')->default(false);
-            $table->string('name', 64)->unique();
-            $table->string('description', 64)->nullable();
+            $table->string('name')->unique();
+            $table->string('description')->nullable();
 
             $table->unsignedTinyInteger('ad_protocol')->default(0);
-            $table->string('ad_server', 128);
+            $table->string('ad_server');
             $table->unsignedInteger('ad_server_port')->default(389);
-            $table->string('ad_base_dn', 128);
+            $table->string('ad_base_dn')->nullable();
 
-            $table->string('login_prefix', 64)->nullable();
-            $table->string('login_suffix', 64)->nullable();
+            $table->string('login_prefix')->nullable();
+            $table->string('login_suffix')->nullable();
         });
 
         Schema::table('users', function (Blueprint $table) {

@@ -15,7 +15,8 @@
         "laravel/tinker": "^2.5",
         "mll-lab/laravel-graphql-playground": "^2.5",
         "nuwave/lighthouse": "^5.2",
-        "tymon/jwt-auth": "^1.0"
+        "tymon/jwt-auth": "^1.0",
+        "ext-ldap": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
