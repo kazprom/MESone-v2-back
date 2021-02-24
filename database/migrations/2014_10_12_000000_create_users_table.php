@@ -19,13 +19,13 @@ class CreateUsersTable extends Migration
             $table->softDeletes();
 
             $table->boolean('enabled')->default(true);
-            $table->string('login', 64)->unique()->index();
+            $table->string('login')->unique()->index();
             $table->string('password');
 
-            $table->string('first_name', 64);
-            $table->string('last_name', 64)->nullable();
-            $table->string('second_name', 64)->nullable();
-            $table->string('avatar', 64)->nullable();
+            $table->string('first_name');
+            $table->string('last_name')->nullable();
+            $table->string('second_name')->nullable();
+            $table->string('avatar')->nullable();
 
             $table->unsignedBigInteger('structure_enterprise_id')->nullable();
             $table->boolean('is_admin')->default(false);
