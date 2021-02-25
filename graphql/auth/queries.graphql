@@ -1,9 +1,9 @@
 extend type Query {
     "Проверка на доступность логина для добавления"
-    checkLogin(login: String!): Boolean @field(resolver: "AuthController@checkLogin")
+    authCheckLogin(login: String!): Boolean @field(resolver: "AuthController@checkLogin")
 
     "Проверка токена"
-    checkToken: Boolean @field(resolver: "AuthController@checkToken")
+    authCheckToken: Boolean @field(resolver: "AuthController@checkToken")
 }
 
 extend type Query @guard {
