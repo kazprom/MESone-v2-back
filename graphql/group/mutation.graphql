@@ -1,0 +1,25 @@
+extend type Mutation @guard {
+    "Создать новую группу"
+    groupCreate(
+        name: String!
+        description: String
+        enabled: Boolean
+    ):Group @create
+
+    "Обновление записи о группе"
+    groupUpdate(
+        id: ID!
+        name: String
+        description: String
+        enabled: Boolean
+    ):Group @update
+
+    "Удаление группы"
+    groupDelete(id: ID!):Group @delete
+
+    "Добавить пользователя в группу"
+    groupAddUser(group_id: ID! user_id: ID!): Boolean @field(resolver: "GroupController@addUser")
+
+    "Исключить пользователя из группы"
+    groupRemoveUser(group_id: ID! user_id: ID!): Boolean @field(resolver: "GroupController@removeUser")
+}

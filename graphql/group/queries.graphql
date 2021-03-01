@@ -1,0 +1,4 @@
+extend type Query {
+    group(id: ID @eq): Group @find
+    groups(enabled: Boolean @eq): [Group!]! @all
+}

@@ -1,0 +1,18 @@
+type Group {
+    id: ID!
+    name: String!
+    description: String
+    enabled: Boolean
+    "Список пользователей состоящих в группе"
+    users: [User!]! @belongsToMany
+#    "Список функций, которые доступны группе"
+#    functions: [Functions!]! @belongsToMany
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type GroupUser {
+    id: ID!
+    group_id: ID!
+    user_id: ID!
+}

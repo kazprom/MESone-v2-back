@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e05028534a3d0203c28e3d1fcd3e0fe3",
+    "content-hash": "02ca85494e4a03f95e4989d5e904084a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1924,16 +1924,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v5.2.0",
+            "version": "v5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "7fc842d8ee254074ef5b80535e9e12c9473ab5f1"
+                "reference": "52d2f8bbb2a7db993e2a36ea064fa4ffe8b4bee2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/7fc842d8ee254074ef5b80535e9e12c9473ab5f1",
-                "reference": "7fc842d8ee254074ef5b80535e9e12c9473ab5f1",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/52d2f8bbb2a7db993e2a36ea064fa4ffe8b4bee2",
+                "reference": "52d2f8bbb2a7db993e2a36ea064fa4ffe8b4bee2",
                 "shasum": ""
             },
             "require": {
@@ -1969,7 +1969,7 @@
                 "phpstan/phpstan-phpunit": "^0.12.17",
                 "phpunit/phpunit": "^7.5 || ^8.4 || ^9",
                 "predis/predis": "^1.1",
-                "pusher/pusher-php-server": "^4",
+                "pusher/pusher-php-server": "^4 || ^5",
                 "rector/rector": "^0.9",
                 "thecodingmachine/phpstan-safe-rule": "^1.0"
             },
@@ -1977,7 +1977,8 @@
                 "bensampo/laravel-enum": "Convenient enum definitions that can easily be registered in your Schema",
                 "laravel/scout": "Required for the @search directive",
                 "mll-lab/graphql-php-scalars": "Useful scalar types, required for @whereConditions",
-                "mll-lab/laravel-graphql-playground": "GraphQL IDE for better development workflow - integrated with Laravel"
+                "mll-lab/laravel-graphql-playground": "GraphQL IDE for better development workflow - integrated with Laravel",
+                "pusher/pusher-php-server": "Required when using the Pusher Subscriptions driver"
             },
             "type": "library",
             "extra": {
@@ -2046,7 +2047,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-31T22:06:50+00:00"
+            "time": "2021-02-26T16:32:19+00:00"
         },
         {
             "name": "opis/closure",
