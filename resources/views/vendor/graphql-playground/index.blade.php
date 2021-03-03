@@ -24,7 +24,7 @@
             settings: { 'request.credentials': 'same-origin' },
             headers: {
                 'Authorization': 'Bearer token',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
         })
     })

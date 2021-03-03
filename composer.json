@@ -2,7 +2,7 @@
     "name": "kazprom/mesone-api",
     "type": "project",
     "description": "MESone API",
-    "version": "2.2.1",
+    "version": "2.2.2",
     "keywords": [],
     "license": "MIT",
     "require": {
@@ -53,6 +53,9 @@
     "prefer-stable": true,
     "scripts": {
         "post-autoload-dump": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate --ansi",
+            "@php artisan jwt:secret --force",
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],

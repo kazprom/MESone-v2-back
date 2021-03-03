@@ -1,6 +1,6 @@
 extend type Mutation {
     "Аутентификация пользователя и генерация токена"
-    authLogin(login: String!, password: String!, domain_id: Int, remember: Boolean): User @field(resolver: "AuthController@login")
+    authLogin(login: String!, password: String!, domain_id: Int, remember: Boolean = false): User @field(resolver: "AuthController@login")
 }
 
 extend type Mutation @guard {
