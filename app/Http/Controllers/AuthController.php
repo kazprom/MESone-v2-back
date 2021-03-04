@@ -38,6 +38,7 @@ class AuthController extends Controller
             /*
             * Aвторизация по домену
             */
+            //TODO Aвторизация по домену
             if ($this->domain($args['login'], $args['password'], $args['domain_id'])) {
                 $userId = User::where('login', $args['login'])->value('id');
                 $token = $guard->loginUsingId($userId);

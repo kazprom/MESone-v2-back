@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        Nuwave\Lighthouse\Tracing\TracingServiceProvider::class,
 
         /*
          * Application Service Providers...

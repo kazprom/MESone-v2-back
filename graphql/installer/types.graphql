@@ -1,0 +1,4 @@
+type InstallerPing {
+    status: Boolean!,
+    log: [String!],
+}

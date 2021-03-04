@@ -1,0 +1,19 @@
+extend type Mutation {
+    "Измениь содержимое env файла"
+    installerSetEnv(
+        "Json-массив(ключ:значение)"
+        json: String!
+    ): Boolean @field(resolver: "InstallerController@setEnv")
+
+    "Обновить все ключи"
+    installerRegenKeys: Boolean @field(resolver: "InstallerController@regenerationKeys")
+
+    "Создание базы данных"
+    installerCreateDataBase: Boolean @field(resolver: "InstallerController@createDataBase")
+
+    "Сброс базы данных"
+    installerResetDataBase: Boolean @field(resolver: "InstallerController@resetDataBase")
+
+    "Удаление базы данных"
+    installerDropDataBase: Boolean @field(resolver: "InstallerController@dropDataBase")
+}
