@@ -12,22 +12,19 @@ class CustomException extends Exception implements RendersErrorsExtensions
      */
     protected $category;
     protected $reason;
-    protected $some;
 
     /**
      * CustomException constructor.
      *
      * @param string $message - Сообщение об ошибке
-     * @param string|null $reason - Причина, по которой возникла эта ошибка
      * @param string|null $category - Категория исключений
-     * @param array|null $some - Дополнительная информация
+     * @param string|null $reason - Причина, по которой возникла эта ошибка
      */
-    public function __construct(string $message, string $category = null, string $reason = null, array $some = null)
+    public function __construct(string $message, string $category = null, string $reason = null)
     {
         parent::__construct($message);
         $this->category = $category ?? 'Custom Exception';
         $this->reason = $reason;
-        $this->some = $some;
     }
 
     /**
@@ -65,9 +62,6 @@ class CustomException extends Exception implements RendersErrorsExtensions
         $result = [];
         if (is_null($this->reason) === false) {
             array_push($result, ['reason' => $this->reason]);
-        }
-        if (is_null($this->some) === false) {
-            array_push($result, ['some' => $this->some]);
         }
         return $result;
     }
