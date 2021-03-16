@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\CustomException;
+use App\Models\Domain;
 use App\Models\Installer;
 use App\Models\User;
 use Exception;
@@ -87,7 +88,6 @@ class AuthController extends Controller
                 /*
                 * Aвторизация по домену
                 */
-                //TODO Aвторизация по домену
                 if ($this->domain($args['login'], $args['password'], $args['domain_id'])) {
                     $userId = User::where('login', $args['login'])->value('id');
                     $token = $guard->loginUsingId($userId);
@@ -112,6 +112,41 @@ class AuthController extends Controller
         } catch (InvalidArgumentException $exception) {
             throw $exception;
         }
+    }
+
+
+    /**
+     * Аутентификация пользователя в домене
+     *
+     * @param $login
+     * @param $password
+     * @param $domain_id
+     * @return bool
+     */
+    private function domain($login, $password, $domain_id): bool
+    {
+        [
+            'ad_protocol' => $protocol,
+            'ad_server' => $hostname,
+            'ad_server_port' => $port,
+            'login_prefix' => $prefix,
+            'login_suffix' => $suffix
+        ] = Domain::where('id', $domain_id)
+            ->select('ad_protocol', 'ad_server', 'ad_server_port', 'login_prefix', 'login_suffix')
+            ->first()->toArray();
+        $result = false;
+        $server_uri = boolval($protocol) ? 'ldaps://' : 'ldap://';
+        $server_uri .= $hostname . ':' . $port;
+        $ldap_connect = ldap_connect($server_uri);
+        if ($ldap_connect) {
+            $ldap_rdn = $prefix . $login . $suffix;
+            $ldap_bind = ldap_bind($ldap_connect, $ldap_rdn, $password);
+            if ($ldap_bind) {
+                $result = true;
+            }
+            ldap_unbind($ldap_connect);
+        }
+        return $result;
     }
 
     /**

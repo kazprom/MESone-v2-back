@@ -18,11 +18,13 @@ class InstallerController extends Controller
 {
     private $path;
     private $env;
-    const PDO_OPTIONS = [
+    private const PDO_OPTIONS = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ];
+
+    private const DATABASE_EXIST = 'DATABASE_EXIST';
 
     /**
      * InstallerController constructor.
@@ -32,6 +34,44 @@ class InstallerController extends Controller
         $this->path = base_path('.env');
         $env = file_get_contents($this->path);
         $this->env = explode("\n", $env);
+    }
+
+    /**
+     * Выкинуть исключение для PDO
+     *
+     * @param Exception $e
+     * @throws CustomException
+     */
+    private function dropPDOException(Exception $e)
+    {
+        switch ($e->getCode()) {
+            case 'HY000':
+                throw new CustomException(
+                    self::DATABASE_EXIST,
+                    'InstallerController',
+                    'Невозможно создать базу данных, база данных существует'
+                );
+//            case 1008:
+//                throw new CustomException(
+//                    'Невозможно удалить базу данных, база данных не существует',
+//                    'InstallerController'
+//                );
+//            case 1045:
+//                throw new CustomException(
+//                    "Пользователю отказано в доступе",
+//                    'InstallerController'
+//                );
+//            case 1049:
+//                throw new CustomException(
+//                    'База данных не существует',
+//                    'InstallerController'
+//                );
+            default:
+                throw new CustomException(
+                    $e->getMessage(),
+                    'InstallerController'
+                );
+        }
     }
 
     /**
@@ -64,43 +104,6 @@ class InstallerController extends Controller
                         'InstallerController'
                     );
             }
-        }
-    }
-
-    /**
-     * Выкинуть исключение для PDO
-     *
-     * @param PDOException $e
-     * @throws CustomException
-     */
-    private function dropPDOException(PDOException $e)
-    {
-        switch ($e->errorInfo[1]) {
-            case 1007:
-                throw new CustomException(
-                    'Невозможно создать базу данных, база данных существует',
-                    'InstallerController'
-                );
-            case 1008:
-                throw new CustomException(
-                    'Невозможно удалить базу данных, база данных не существует',
-                    'InstallerController'
-                );
-            case 1045:
-                throw new CustomException(
-                    "Пользователю отказано в доступе",
-                    'InstallerController'
-                );
-            case 1049:
-                throw new CustomException(
-                    'База данных не существует',
-                    'InstallerController'
-                );
-            default:
-                throw new CustomException(
-                    $e->getMessage(),
-                    'InstallerController'
-                );
         }
     }
 
@@ -169,8 +172,7 @@ class InstallerController extends Controller
             Artisan::call('key:generate');
             Artisan::call('jwt:secret --force');
         } catch (Exception $exception) {
-            //TODO проработать исключения
-            dd($exception);
+            throw $exception;
         }
         return true;
     }
@@ -250,7 +252,7 @@ class InstallerController extends Controller
 
             $database = config('database.connections.' . $type . '.database');
             $conn->exec("CREATE DATABASE `$database`");
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             $this->dropPDOException($e);
         }
         return true;
