@@ -1,0 +1,4 @@
+extend type Query {
+    "Получить настройки компании"
+    company: Company @first
+}

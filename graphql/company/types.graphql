@@ -1,0 +1,6 @@
+type Company {
+    id: ID!
+    company_name: String
+    launch_date: DateTime
+    logo_path: String
+}

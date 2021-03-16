@@ -1,0 +1,9 @@
+extend type Mutation @guard{
+    "Изменить настройки компании"
+    companyUpdate(
+        id: ID = 1
+        company_name: String
+        launch_date: DateTime
+        logo_path: String
+    ): Company @upsert
+}
