@@ -28,8 +28,12 @@
         }
 
         svg {
-            display: block;
-            vertical-align: middle;
+            width: 200px;
+            height: 175px;
+        }
+
+        h1{
+            text-align: center;
         }
 
         .wrapper {
