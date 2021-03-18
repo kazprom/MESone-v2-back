@@ -6,6 +6,9 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\CustomException;
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Uri;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use PDO;
@@ -24,7 +27,13 @@ class InstallerController extends Controller
         PDO::ATTR_EMULATE_PREPARES => false,
     ];
 
+    private $jenkins;
+
     private const DATABASE_EXIST = 'DATABASE_EXIST';
+    private const JENKINS_401 = 'JENKINS_401';
+    private const JENKINS_403 = 'JENKINS_403';
+    private const JENKINS_404 = 'JENKINS_404';
+    private const JENKINS_WRONG_JOB = 'JENKINS_WRONG_JOB';
 
     /**
      * InstallerController constructor.
@@ -34,6 +43,16 @@ class InstallerController extends Controller
         $this->path = base_path('.env');
         $env = file_get_contents($this->path);
         $this->env = explode("\n", $env);
+
+        /*
+         * Jenkins
+         */
+
+        $uri = new Uri(config('installer.jenkins.url'));
+        $base_path = config('installer.jenkins.isAuth')
+            ? $uri->withUserInfo(config('installer.jenkins.user'), config('installer.jenkins.token'))
+            : $uri;
+        $this->jenkins = new Client(['base_uri' => $base_path]);
     }
 
     /**
@@ -91,7 +110,7 @@ class InstallerController extends Controller
             if ($payload->installer !== true) {
                 throw new JWTException(null, 999);
             }
-        } catch (JWTException $exception) {
+        } catch (Exception $exception) {
             switch ($exception->getCode()) {
                 case 0:
                     throw new CustomException(
@@ -304,6 +323,92 @@ class InstallerController extends Controller
             $conn->exec("DROP DATABASE `$database`");
         } catch (PDOException $e) {
             $this->dropPDOException($e);
+        }
+        return true;
+    }
+
+    /**
+     * Выкинуть исключение для PDO
+     *
+     * @param Exception $e
+     * @throws CustomException
+     * @throws Exception
+     */
+    private function dropJenkinsException(Exception $e)
+    {
+        switch ($e->getCode()) {
+            case 0:
+                if ($e->getLine() === 210) throw new CustomException(
+                    self::JENKINS_404,
+                    'InstallerController',
+                    'Не верный адрес Jenkins API.'
+                );
+
+            case 401:
+                throw new CustomException(
+                    self::JENKINS_401,
+                    'InstallerController',
+                    'В доступе к Jenkins API отказано. Не верный логин/токен.'
+                );
+
+            case 403:
+                throw new CustomException(
+                    self::JENKINS_403,
+                    'InstallerController',
+                    'В доступе к Jenkins API отказано.'
+                );
+
+            case 404:
+                throw new CustomException(
+                    self::JENKINS_WRONG_JOB,
+                    'InstallerController',
+                    "Job с таким именем не найден."
+                );
+
+            default:
+                throw $e;
+        }
+    }
+
+    /**
+     * Получить все доступные job'ы
+     *
+     * @param $_
+     * @param array $args
+     * @param Context $context
+     * @return array
+     * @throws GuzzleException|CustomException
+     */
+    public function jenkinsListJob($_, array $args, Context $context): array
+    {
+        $this->isInstaller($context);
+        try {
+            $jobs = $this->jenkins->get("/api/json")->getBody()->getContents();
+            $jobs = json_decode($jobs, true)['jobs'];
+            return array_map(function ($job) {
+                return $job['name'];
+            }, $jobs);
+        } catch (Exception $e) {
+            $this->dropJenkinsException($e);
+        }
+    }
+
+    /**
+     * Выполнить job
+     *
+     * @param $_
+     * @param array $args
+     * @param Context $context
+     * @return bool
+     * @throws GuzzleException|CustomException
+     */
+    public function jenkinsLaunchJob($_, array $args, Context $context): bool
+    {
+        $this->isInstaller($context);
+        try {
+            $this->jenkins->post("/job/{$args['name']}/build");
+        } catch (Exception $e) {
+            $this->dropJenkinsException($e);
         }
         return true;
     }

@@ -7,4 +7,10 @@ extend type Query {
 
     "Тест соединения с базой данных"
     installerCheckDbConnection: Boolean @field(resolver: "InstallerController@checkDbConnection")
+
+    "Получить все доступные job'ы"
+    installerJenkinsListJob: [String!] @field(resolver: "InstallerController@jenkinsListJob")
+
+    "Выполнить job"
+    installerJenkinsLaunchJob(name: String!): Boolean @field(resolver: "InstallerController@jenkinsLaunchJob")
 }

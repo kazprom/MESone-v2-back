@@ -1,4 +1,7 @@
 extend type Query {
+    "Аутентификация пользователя и генерация токена"
+    authLogin(login: String!, password: String!, domain_id: Int, remember: Boolean = false): User @field(resolver: "AuthController@login")
+
     "Проверка на доступность логина для добавления"
     authCheckLogin(login: String!): Boolean @field(resolver: "AuthController@checkLogin")
 
@@ -7,6 +10,12 @@ extend type Query {
 }
 
 extend type Query @guard {
+    "Обновление текущего токена пользователя"
+    authRefreshToken: String @field(resolver: "AuthController@refreshToken")
+
+    "Удаление текущего токена пользователя"
+    authLogout: User @field(resolver: "AuthController@logout")
+
     "Получить данные авторизированного пользователя"
     me: User @auth
 }
