@@ -131,17 +131,20 @@ class InstallerController extends Controller
      *
      * @param $_
      * @param array $args
+     * @param Context $context
      * @return string
+     * @throws CustomException
      */
-    public function getEnv($_, array $args): string
+    public function getEnv($_, array $args, Context $context): string
     {
+        $this->isInstaller($context);
         $result = [];
         foreach ($this->env as $value) {
             $key_value = explode('=', $value);
             if (
                 empty($key_value[0]) ||  // Пустое значение
                 $key_value[0][0] === '#' || // Закоментированое значение
-                empty($args['keys']) === false && array_search($key_value[0], $args['keys']) === false // Вывод конктетных ключей
+                empty($args['keys']) === false && array_search($key_value[0], $args['keys']) === false // Вывод конкретных ключей
             ) continue;
             $result[$key_value[0]] = $key_value[1];
         }

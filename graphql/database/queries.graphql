@@ -1,0 +1,4 @@
+extend type Query @guard {
+    "Получить список установленных драйверов DB"
+    databaseGetAvailableDrivers:[String!] @field(resolver: "DatabaseController@availableDrivers")
+}
