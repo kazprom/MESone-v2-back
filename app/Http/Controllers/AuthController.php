@@ -23,6 +23,7 @@ class AuthController extends Controller
 
     private const WRONG_AUTH_DATA = 'WRONG_AUTH_DATA';
     private const AUTH_FREEZE_TIME = 'AUTH_FREEZE_TIME';
+    private const LOGIN_NOT_UNIQUE = 'LOGIN_NOT_UNIQUE';
 
     public function __construct(Request $request)
     {
@@ -47,11 +48,20 @@ class AuthController extends Controller
                 throw new CustomException(
                     self::AUTH_FREEZE_TIME . '_' . $this->freezeTime * $this->factor,
                     'AuthController',
-                    'После не правельного ввода логина и/или пароля, нужно подождать ' . $this->freezeTime * $this->factor . ' секунд',
+                    'После не правильного ввода логина и/или пароля, нужно подождать ' . $this->freezeTime * $this->factor . ' секунд',
                 );
-            default:
-                throw $e;
         }
+
+        switch ($e->getCode()) {
+            case '23000':
+                throw new CustomException(
+                    self::LOGIN_NOT_UNIQUE,
+                    'AuthController',
+                    'Пользователь с таким логином существует.',
+                );
+        }
+
+        throw $e;
     }
 
     /**
@@ -236,5 +246,56 @@ class AuthController extends Controller
     private function removeFreezeTime(): void
     {
         cache()->forget($this->requestToken);
+    }
+
+    /**
+     * Создать нового пользователя
+     *
+     * @param $_
+     * @param array $args
+     * @return User
+     * @throws Exception
+     */
+    public function createUser($_, array $args): User
+    {
+        try {
+            $model = new User();
+
+            $payload = ['created_at' => now()];
+            foreach ($args as $key => $value) {
+                switch ($key) {
+                    case 'directive':
+                        break;
+                    case 'password':
+                        $payload[$key] = password_hash($value, PASSWORD_DEFAULT);
+                        break;
+                    default:
+                        $payload[$key] = $value;
+                }
+            }
+
+            $findTrashedUser = $model->withTrashed()->where('login', $args['login'])->first();
+            if ($findTrashedUser && $findTrashedUser->trashed()) {
+                $findTrashedUser->restore();
+                $findTrashedUser->update($payload);
+                return $findTrashedUser;
+            }
+
+            return $model->create($payload);
+        } catch (Exception $exception) {
+            $this->dropException($exception);
+        }
+    }
+
+    /**
+     * Мягкое удаление пользователя
+     *
+     * @param null $_
+     * @param array<string, mixed> $args
+     * @return bool
+     */
+    public function deleteUser($_, array $args): bool
+    {
+        return User::destroy($args['id']);
     }
 }

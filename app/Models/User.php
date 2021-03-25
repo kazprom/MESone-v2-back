@@ -4,16 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
- * @method static where(string $string, mixed $user_id)
+ * @method static where(string $column, string $value)
+ * @method withTrashed()
+ * @method find($userId)
+ * @method create(array $payload)
  */
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -41,6 +45,15 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $casts = [];
+
+    /**
+     * Отметить столбец из массива как дату.
+     *
+     * @var string[]
+     */
+    protected $dates = [
+        'deleted_at',
+    ];
 
     public function getJWTIdentifier()
     {

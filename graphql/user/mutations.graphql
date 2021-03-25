@@ -1,0 +1,32 @@
+extend type Mutation @guard {
+    "Создать нового пользователя"
+    userCreate(
+        first_name: String!,
+        last_name: String,
+        second_name: String,
+        login: String!,
+        password: String,
+        enabled:  Boolean,
+        avatar: String,
+        domain_id: ID,
+        structure_enterprise_id: ID
+    ):User @field(resolver: "AuthController@createUser")
+
+    "Обновление записи о пользователе"
+    userUpdate(
+        id: ID!
+        first_name: String,
+        last_name: String,
+        second_name: String,
+        login: String,
+        password: String,
+        enabled:  Boolean,
+        avatar: String,
+        domain_id: ID,
+        structure_enterprise_id: ID
+        is_admin: Boolean
+    ):User @update
+
+    "Мягкое удаление пользователя"
+    userDelete(id: ID!):Boolean @field(resolver: "AuthController@deleteUser")
+}
