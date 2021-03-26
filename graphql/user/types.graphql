@@ -12,8 +12,8 @@ type User {
     domain: Domain
     structure_enterprise_id: ID
     is_admin:  Boolean
-#    "Список функций, которые доступны пользователю"
-#    functions: [Functions!]! @belongsToMany
+    "Список инструментов, которые доступны пользователю"
+    tools: [Tool!]! @belongsToMany
     "Список групп в которых состит пользователь"
     groups: [Group!]! @belongsToMany
     created_at: DateTime

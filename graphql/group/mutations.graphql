@@ -15,7 +15,7 @@ extend type Mutation @guard {
     ):Group @update
 
     "Удаление группы"
-    groupDelete(id: ID!):Group @delete
+    groupDelete(id: ID!):Boolean @field(resolver: "GroupController@deleteGroup")
 
     "Добавить пользователя в группу"
     groupAddUser(group_id: ID! user_id: ID!): Boolean @field(resolver: "GroupController@addUser")

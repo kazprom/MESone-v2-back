@@ -5,11 +5,39 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\GroupUser;
 use App\Models\User;
-//use Illuminate\Http\Request;
 use App\Exceptions\CustomException;
+use Exception;
 
 class GroupController extends Controller
 {
+
+    private const WRONG_GROUP_ID = 'WRONG_GROUP_ID';
+
+    /**
+     * Выкинуть исключение
+     *
+     * @param Exception $e
+     * @throws CustomException
+     */
+    private function dropException(Exception $e)
+    {
+        $category = 'GroupController';
+
+        switch ($e->getMessage()) {
+            case self::WRONG_GROUP_ID:
+                throw new CustomException(
+                    self::WRONG_GROUP_ID,
+                    $category,
+                    'Не верный id группы.'
+                );
+            default:
+                throw new CustomException(
+                    $e->getMessage(),
+                    $category
+                );
+        }
+    }
+
     /**
      * Проверить на существование пользователя
      *
@@ -52,6 +80,19 @@ class GroupController extends Controller
             return false;
         }
         return true;
+    }
+
+    public function deleteGroup($_, array $args): bool
+    {
+        try {
+            $tool = Group::find($args['id']);
+            if (is_null($tool)) {
+                throw new CustomException(self::WRONG_GROUP_ID);
+            }
+            return $tool->delete();
+        } catch (Exception $e) {
+            $this->dropException($e);
+        }
     }
 
     /**

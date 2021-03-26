@@ -1,0 +1,37 @@
+type Tool {
+    id: ID!
+    name: String
+    label: String
+    description: String
+    type: String
+    enabled: Boolean
+    #    hierarchies_id: ID
+    module_name: String
+    "Список групп имеющие доступ к инструменту"
+    groups: [Group!]! @belongsToMany
+    "Список пользователей имеющие доступ к инструменту"
+    users: [User!]! @belongsToMany
+    "Массив с настройками"
+    settings: [ToolsSettings]
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type ToolsSettings {
+    id: ID!
+    key: String!
+    value: String
+    tool_id: ID!
+}
+
+type ToolUser {
+    id: ID!
+    user_id: ID!
+    tool_id: ID!
+}
+
+type GroupTool {
+    id: ID!
+    group_id: ID!
+    tool_id: ID!
+}

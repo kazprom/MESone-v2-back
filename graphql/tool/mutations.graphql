@@ -1,0 +1,34 @@
+extend type Mutation @guard {
+    "Добавить новый инструмент"
+    toolCreate(
+        name:String!,
+        module_name:String!,
+        type:String,
+    ):Tool @field(resolver: "ToolController@createTool")
+
+    "Изменить инструмент"
+    toolUpdate(
+        id:ID!,
+        name:String,
+        label:String,
+        description:String,
+        type:String,
+        enabled:Boolean,
+        module_name:String,
+    ):Tool @field(resolver: "ToolController@updateTool")
+
+    "Удалить инструмент"
+    toolDelete(id:ID!):Boolean @field(resolver: "ToolController@deleteTool")
+
+    "Дать доступ пользователю к инструменту"
+    toolAddUser(user_id: ID! tool_id: ID!): ToolUser @create
+
+    "Отменить доступ пользователю к инструменту"
+    toolRemoveUser(user_id: ID! tool_id: ID!): Boolean @field(resolver: "ToolController@removeUser")
+
+    "Дать доступ группе к инструменту"
+    toolAddGroup(group_id: ID! tool_id: ID!): GroupTool @create
+
+    "Отменить доступ группе к инструменту"
+    toolRemoveGroup(group_id: ID! tool_id: ID!): Boolean @field(resolver: "ToolController@removeGroup")
+}

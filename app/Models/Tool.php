@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * @method static where(string $string, mixed $group_id)
- * @method static find($id)
+ * @method create(array $payload)
+ * @method static where(string $string, mixed $name)
+ * @method static find(mixed $id)
  */
-class Group extends Model
+class Tool extends Model
 {
     use HasFactory;
 
@@ -20,9 +21,14 @@ class Group extends Model
      * @var string[]
      */
     protected $fillable = [
+        'created_at',
+        'updated_at',
         'name',
+        'label',
         'description',
+        'type',
         'enabled',
+        'module_name',
     ];
 
     public function users(): BelongsToMany
@@ -30,8 +36,8 @@ class Group extends Model
         return $this->belongsToMany(User::class);
     }
 
-    public function tools(): BelongsToMany
+    public function groups(): BelongsToMany
     {
-        return $this->belongsToMany(Tool::class);
+        return $this->belongsToMany(Group::class);
     }
 }

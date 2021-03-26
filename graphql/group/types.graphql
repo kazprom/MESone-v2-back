@@ -5,8 +5,8 @@ type Group {
     enabled: Boolean
     "Список пользователей состоящих в группе"
     users: [User!]! @belongsToMany
-#    "Список функций, которые доступны группе"
-#    functions: [Functions!]! @belongsToMany
+    "Список инструментов, которые доступны группе"
+    tools: [Tool!]! @belongsToMany
     created_at: DateTime
     updated_at: DateTime
 }

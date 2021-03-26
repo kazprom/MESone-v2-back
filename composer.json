@@ -2,7 +2,7 @@
     "name": "kazprom/mesone-api",
     "type": "project",
     "description": "MESone API",
-    "version": "2.6.0",
+    "version": "2.7.0",
     "keywords": [],
     "license": "MIT",
     "require": {

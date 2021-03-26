@@ -1,0 +1,10 @@
+extend type Query @guard {
+    "Получить инструмент по ID"
+    tool(id: ID @eq): Tool @find
+
+    "Получить список инструментов"
+    tools: [Tool!]! @all
+
+    "Проверить доступность имени для инструмента"
+    toolCheckName(name:String!):Boolean @field(resolver: "ToolController@checkName")
+}
